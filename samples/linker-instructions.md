@@ -1,5 +1,7 @@
 # Using the .NET IL Linker
 
+***Note:*** In 3.0, the linker has shipped as part of the SDK (still marked as "preview"), and the out-of-band nuget package is no longer supported. Please see the new instructions at https://aka.ms/dotnet-illink.
+
 The .NET team has built a linker to reduce the size of .NET Core applications. It is built on top of the excellent and battle-tested [mono linker](https://github.com/mono/linker). The Xamarin tools also use this linker.
 
 In trivial cases, the linker can reduce the size of applications by 50%. The size wins may be more favorable or more moderate for larger applications. The linker removes code in your application and dependent libraries that are not reached by any code paths. It is effectively an application-specific dead code analysis.
@@ -14,7 +16,7 @@ For more advanced IL Linker instructions, see [Using IL Linker Advanced Features
 
 ## Instructions
 
-The instructions assume you are using [.NET Core 2.0](https://github.com/dotnet/core/blob/master/release-notes/download-archive.md) or [.NET Core daily builds](https://github.com/dotnet/core/blob/master/daily-builds.md). You can validate your .NET Core SDK version by typing `dotnet --version`.
+The instructions assume you are using [.NET Core 2.0](https://github.com/dotnet/core/blob/main/release-notes/download-archive.md) or [.NET Core daily builds](https://github.com/dotnet/core/blob/main/daily-builds.md). You can validate your .NET Core SDK version by typing `dotnet --version`.
 
 1. Select a project to test with. If you don't have one, you can do one of the following:
    * Create one with `dotnet new console -o testapp`; `cd testapp`, or
@@ -23,12 +25,12 @@ The instructions assume you are using [.NET Core 2.0](https://github.com/dotnet/
   * `dotnet new nuget`
   * Add this line to nuget.config, under `<clear />`: `<add key="dotnet-core" value="https://dotnet.myget.org/F/dotnet-core/api/v3/index.json" />`
   * The final file should look like [nuget.config](nuget.config).
-1. Add a reference to the [latest version of the linker package](https://dotnet.myget.org/feed/dotnet-core/package/nuget/Illink.Tasks) in your .csproj, using the following:
-   * `dotnet add package ILLink.Tasks -v 0.1.4-preview-906439`
+1. Add a reference to the [latest version of the linker package](https://dotnet.myget.org/feed/dotnet-core/package/nuget/ILLink.Tasks) in your .csproj, using the command below. As of writing, that version is `0.1.5-preview-1841731`:
+   * `dotnet add package ILLink.Tasks -v 0.1.5-preview-1841731`
 1. Publish the application, using the following:
-   * `dotnet publish -c release -r <RID> -o out`
+   * `dotnet publish -c Release -r <RID> -o out`
    * where `<RID>` is one of `win-x64`, `win-x86`, `linux-x64`, `osx-x64` depending the OS that you want to publish for.
-   * Example: `dotnet publish -c release -r win-x64 -o out`
+   * Example: `dotnet publish -c Release -r win-x64 -o out`
 1. Run the application, with the following and depending the name of the application:
    * Windows: `out\testapp`
    * Linux/macOS: `./out/testapp`
@@ -40,17 +42,17 @@ The linker can be controlled with the following commandline switches.
 * `/p:LinkDuringPublish=false` -- Disable the linker.
 * `/p:ShowLinkerSizeComparison=true` -- Displays a table of size reductions for the application.
 
-You must disable the linker if you want to publish a [framework dependent application](https://docs.microsoft.com/en-us/dotnet/core/deploying/) while you have ILLink.Tasks as a dependency. This behavior will be changed in a later release.
+You must disable the linker if you want to publish a [framework dependent application](https://docs.microsoft.com/dotnet/core/deploying/) while you have ILLink.Tasks as a dependency. This behavior will be changed in a later release.
 
 ## Determining Code Size Reduction
 
 There are two straightforward approaches to determining the code size reduction provided by the linker.
 
 * Publish an application with the linker enabled and pass the `/p:ShowLinkerSizeComparison=true` flag. The output will describe the benefit. For example:
-  * `dotnet publish -c release -r osx-x64 -o out /p:ShowLinkerSizeComparison=true`
+  * `dotnet publish -c Release -r osx-x64 -o out /p:ShowLinkerSizeComparison=true`
 * Publish an application two different ways:
-  * `dotnet publish -c release -r linux-x64 -o linkedapp`
-  * `dotnet publish -c release -r linux-x64 -o notlinkedapp /p:LinkDuringPublish=false`
+  * `dotnet publish -c Release -r linux-x64 -o linkedapp`
+  * `dotnet publish -c Release -r linux-x64 -o notlinkedapp /p:LinkDuringPublish=false`
 
 Note: The `osx-x64` and `linux-x64` runtime IDs are used in the examples above. Feel free to use any runtime ID that you would like, such as `win-x64`.
 

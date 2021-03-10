@@ -1,15 +1,14 @@
 # Using dotnet-svcutil.xmlserializer on .NET Core
 
-Just like the svcutil XmlSerializer Type Generation function on desktop, dotnet-svcutil.xmlserializer NuGet package is the solution for WCF applications on .NET Core and .NET Standard Libraries. It pre-generates c# serialization code for the types used by Service Contract in the WCF client applications that can be serialized using the XmlSerializer to improve the startup performance of Xml Serialization when serializing or de-serializing objects of those types using XmlSerializer. 
+Just like the svcutil XmlSerializer Type Generation function on desktop, dotnet-svcutil.xmlserializer NuGet package is the solution for WCF applications on .NET Core and .NET Standard Libraries. It pre-generates c# serialization code for the types used by Service Contract in the WCF client applications that can be serialized using the XmlSerializer to improve the startup performance of Xml Serialization when serializing or de-serializing objects of those types using XmlSerializer.
 
-You can start using the tool today following the instructions below. 
+You can start using the tool today following the instructions below.
 
 ## Prerequisites
 
-The following is required for dotnet-svcutil.xmlserializer to work. 
+The following is required for dotnet-svcutil.xmlserializer to work.
 
-* [.NET Core SDK 2.1 or later](https://www.microsoft.com/net/download/dotnet-core/sdk-2.1.300)
-* [.NET Core Runtime 2.1 or later](https://www.microsoft.com/net/download/dotnet-core/runtime-2.1.0)
+* [.NET Core SDK 2.1 or later](https://dotnet.microsoft.com/download)
 
 You can use the command `dotnet --info` to check which versions of .NET Core SDK and runtime you already have installed.
 
@@ -66,12 +65,12 @@ Here are the step by step instructions on how to use dotnet-svcutil.xmlserialize
     ```
 5. Edit the .csproj and add a reference to the dotnet-svcutil.xmlserializer package. For example,
 
-    i. Run command: `dotnet add package dotnet-svcutil.xmlserializer -v 1.0.0-preview1`
+    i. Run command: `dotnet add package dotnet-svcutil.xmlserializer -v 1.0.0`
 
     ii. Add the following lines in MyWCFClient.csproj,
     ```xml
     <ItemGroup>
-      <DotNetCliToolReference Include="dotnet-svcutil.xmlserializer" Version="1.0.0-preview1" />
+      <DotNetCliToolReference Include="dotnet-svcutil.xmlserializer" Version="1.0.0" />
     </ItemGroup>
     ```
 

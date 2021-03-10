@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Displays .NET version and environment information.</Description>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+    <RollForward>LatestMajor</RollForward>
+    <VersionPrefix>1.0.4</VersionPrefix>
+    <PackageProjectUrl>https://github.com/dotnet/core/blob/main/samples/dotnet-runtimeinfo/README.md</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>.NET Foundation</Copyright>
+    <Authors>.NET Team</Authors>
+    <PackAsTool>true</PackAsTool>
+  </PropertyGroup>
+
+</Project>

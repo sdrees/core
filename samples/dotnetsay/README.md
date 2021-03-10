@@ -1,12 +1,12 @@
-# dotnetsay .NET Core Global Tools Sample
+# dotnetsay .NET Tool Sample
 
-This sample demonstrates how to use and create .NET Core Global Tools. It works on Windows, macOS and Linux.
+This sample demonstrates how to use and create .NET Tools. It works on Windows, macOS and Linux.
 
-You must have [.NET Core 2.1](https://github.com/aspnet/Home/wiki/2.1.0-Early-Access-Downloads) or higher installed.
+You must have the .NET SDK installed. [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet/3.1) is recommended.
 
-## Try the pre-built `dotnetsay` Global Tool
+## Installation
 
-You can quickly install and try the [dotnetsay global tool from nuget.org](https://www.nuget.org/packages/dotnetsay/) using the following commands.
+You can quickly install and try the [dotnetsay](https://www.nuget.org/packages/dotnetsay/):
 
 ```console
 dotnet tool install -g dotnetsay
@@ -21,15 +21,7 @@ You can uninstall the tool using the following command.
 dotnet tool uninstall -g dotnetsay
 ```
 
-## Getting the sample
-
-The easiest way to get the sample is by cloning the samples repository with [git](https://git-scm.com/downloads), using the following instructions.
-
-```console
-git clone https://github.com/dotnet/core/
-```
-
-You can also [download the repository as a zip](https://github.com/dotnet/core/archive/master.zip).
+Also see [dotnet-runtimeinfo](../dotnet-runtimeinfo/README.md).
 
 ## Build the Tool from source
 
@@ -38,12 +30,12 @@ You can build and package the tool using the following commands. The instruction
 ```console
 cd samples
 cd dotnetsay
-dotnet pack -c release -o nupkg
+dotnet pack -c Release -o nupkg
 dotnet tool install --add-source .\nupkg -g dotnetsay
 dotnetsay
 ```
 
-> Note: On macOS and Linux, `.\nupkg` will need be switched to `./nupkg` to accomodate for the different slash directions.
+> Note: On macOS and Linux, `.\nupkg` will need be switched to `./nupkg` to accommodate for the different slash directions.
 
 You can uninstall the tool using the following command.
 
@@ -51,7 +43,7 @@ You can uninstall the tool using the following command.
 dotnet tool uninstall -g dotnetsay
 ```
 
-The `PackAsTool` property in the [project file](dotnetsay.csproj) enables packing a console application as a global tool, as you can see in the following simplified example. Applications must target .NET Core 2.1 or higher for global tools.
+The `PackAsTool` property in the [project file](dotnetsay.csproj) enables packing a console application as a global tool, as you can see in the following simplified example. Applications must target .NET Core 2.1 or higher for .NET Tools.
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -65,9 +57,9 @@ The `PackAsTool` property in the [project file](dotnetsay.csproj) enables packin
 </Project>
 ```
 
-## Enabling SourceLink with Tools
+## Enabling Source Link with Tools
 
-You can make tools debuggable with [sourcelink](https://github.com/dotnet/sourcelink) by adding the following properties and `PackageReference`. The example is specific to git and GitHub. See [dotnet/sourcelink](https://github.com/dotnet/sourcelink) for other options.
+You can make tools and libraries debuggable with [Source Link](https://github.com/dotnet/sourcelink) by adding the following properties and `PackageReference`. The example is specific to git and GitHub. See [dotnet/sourcelink](https://github.com/dotnet/sourcelink) for other options.
 
 ```xml
 <PropertyGroup>
@@ -76,24 +68,22 @@ You can make tools debuggable with [sourcelink](https://github.com/dotnet/source
   <EmbedUntrackedSources>true</EmbedUntrackedSources>
 </PropertyGroup>
 
-<ItemGroup Condition="'$(ContinuousIntegrationBuild)'=='true'">
-  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-62909-01" PrivateAssets="All"/>
+<ItemGroup>
+  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
 </ItemGroup>
 ```
 
-> Note: This example conditionalizes the `PackageReference` to the `ContinuousIntegrationBuild` property being set. There is no problem running SourceLink on every build, however, it will fail if it cannot find a `.git` directory. Given that behavior, it may be easier to use the approach shown above.
+When you or your users debug your binaries with Source Link, the debugger will attempt to retrieve content (like `.cs` files) from the recorded git commit in your binaries. The given commit needs to be published to a public or accessible private repo in order for that to work. This means that you should build from a branch whose commits are stable and already published. You can build from a PR branch, but the commits may not remain stable for long, as the PRs may be [squashed on merge](https://help.github.com/articles/about-pull-request-merges/).
 
-Use [`ContinuousIntegrationBuild`](https://github.com/dotnet/sourcelink/blob/master/docs/README.md#continuousintegrationbuild) when producing official builds. The simplest way to do that is by packing with an additional property set.
+For official builds, we recommend that you enable [`ContinuousIntegrationBuild`](https://github.com/dotnet/sourcelink/blob/master/docs/README.md#continuousintegrationbuild), so that the built artifacts are [reproducible and deterministic](https://reproducible-builds.org/) (same outcome independent of build machine or time).
 
-```console
-dotnet pack -c release -o nupkg /p:ContinuousIntegrationBuild=true
-```
+The [dotnetsay project](dotnetsay.csproj) doesn't add these properties or the `PackageReference` but relies on the same information in the [Directory.Build.props](../Directory.Build.props) in the parent directory. The use of a Directory.Build.props is recommended for Source Link, to avoid maintaining these settings in multiple project files.
 
-Make sure to build official packages from repositories with stable commit hashes. If you build from a branch whose commits are later [squashed](https://help.github.com/articles/about-pull-request-merges/), then the commit hashs will not be found and sourcelink will not work correctly.
+Source Link will fail if it cannot find a `.git` directory. This can happen if you build projects in containers at solution root and not repo root for example. There are solutions to that problem described at the [dotnet/sourcelink repo](https://github.com/dotnet/sourcelink).
 
 ## Debug Tools with Visual Studio
 
-You can debug sourcelink-enabled .NET Core Global tools with Visual Studio, using the `Developer Command Prompt for VS 2017`. The following example launches `dotnetsay` for debugging:
+You can debug Source Link enabled .NET Tools with Visual Studio, using the `Developer Command Prompt for VS 2017`. The following example launches `dotnetsay` for debugging:
 
 ```console
 devenv /debugexe c:\Users\rich\.dotnet\tools\dotnetsay.exe
