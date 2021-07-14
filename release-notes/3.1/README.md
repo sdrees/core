@@ -7,12 +7,15 @@
 - [Containers](https://hub.docker.com/_/microsoft-dotnet)
 - [Supported OSes](3.1-supported-os.md)
 - [Known Issues](3.1-known-issues.md)
-- [Contributors](3.1-contributor-list.md)
+- [Contributors](https://dotnet.microsoft.com/thanks )
 
 ## Releases
 
 | Date | Release |
 | :-- | :-- |
+| 2021/07/13 | [3.1.17](./3.1.17/3.1.17.md) |
+| 2021/06/08 | [3.1.16](./3.1.16/3.1.16.md) |
+| 2021/05/11 | [3.1.15](./3.1.15/3.1.15.md) |
 | 2021/04/13 | [3.1.14](./3.1.14/3.1.14.md) |
 | 2021/03/09 | [3.1.13](./3.1.13/3.1.13.md) |
 | 2021/02/09 | [3.1.12](./3.1.12/3.1.12.md) |
